@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'eventmachine'
+require 'readline'
+
+class KeeVeeClient < EventMachine::Connection
+  def post_init
+    puts "Hey there, welcome to the KeeVee client"
+    process_input
+  end
+
+  def process_input
+    command = Readline.readline('> ', true)
+    send_data command
+  end
+
+  def receive_data(data)
+    puts data
+    process_input
+  end
+end
+
+EventMachine::run {
+  EventMachine::connect "127.0.0.1", 8081, KeeVeeClient
+}
